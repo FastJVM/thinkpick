@@ -2,6 +2,8 @@
 title: Decide packaging, distribution, and license
 status: draft
 owner: nicktoper
+contexts:
+  - product/vision
 workflow:
   name: draft-for-human
   steps:

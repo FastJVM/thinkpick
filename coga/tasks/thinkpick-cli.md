@@ -2,6 +2,8 @@
 title: thinkpick CLI
 status: draft
 owner: nicktoper
+contexts:
+  - product/vision
 workflow:
   name: code/design-then-implement
   steps:

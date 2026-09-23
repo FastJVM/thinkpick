@@ -2,6 +2,8 @@
 title: Decide effort scale and provider mapping
 status: draft
 owner: nicktoper
+contexts:
+  - product/vision
 workflow:
   name: draft-for-human
   steps:

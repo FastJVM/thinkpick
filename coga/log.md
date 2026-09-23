@@ -16,3 +16,4 @@
 2026-09-22 22:32 [decide-classifier-approach] [human:nicktoper] created (status=draft)
 2026-09-22 22:32 [decide-effort-scale-and-provider-mapping] [human:nicktoper] created (status=draft)
 2026-09-22 22:32 [decide-packaging-distribution-and-license] [human:nicktoper] created (status=draft)
+2026-09-23 11:33 [decide-classifier-approach] [human:nicktoper] ticket authoring launched (interviewer=claude, agent=claude)
