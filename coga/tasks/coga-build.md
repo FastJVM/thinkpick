@@ -12,7 +12,7 @@ workflow:
   - name: generate-batch
     skills: []
     assignee: agent
-step: 1 (gather-and-spec)
+step: 2 (generate-batch)
 ---
 
 ## Description
@@ -34,3 +34,22 @@ The blackboard is a notepad for the human and agent to use while working
 through this task. For onboarding it holds the raw intake from the
 gather-and-spec chat — the working notes behind the vision, which stay here
 rather than in the durable `contexts/product/vision` doc.
+
+## gather-and-spec intake (2026-09-22)
+
+- Ask: "a tool to know what level of thinking of model to use in general for
+  my tasks".
+- Audience: the user + other interested people. Small open-source tool.
+  Explicitly **not** a web app.
+- Decide mode: user asked for a recommendation; agent proposed "recommend on
+  the spot + log was-it-right feedback; learning deferred to v2". Tradeoff
+  noted: early picks only as good as initial heuristics/cheap-model; full
+  benchmarking is higher-quality data but slow/expensive. User accepted
+  (didn't push back).
+- Form factor: CLI + library core (user confirmed "not a webapp").
+- Vision signed off in chat; written to coga/contexts/product/vision/SKILL.md.
+- Deferred decisions → ticket candidates for generate-batch: classifier
+  approach; provider/model support + level mapping; scale shape (named vs
+  token budget); integrations (Claude Code hook); v2 learning design;
+  packaging/distribution/license.
+
