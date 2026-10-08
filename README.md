@@ -8,8 +8,8 @@ short reason. See [the vision](coga/contexts/product/vision/SKILL.md).
 
 Proof of concept. Nothing is built yet. The open question comes first: **can
 the right effort level be predicted from a task description, and does the
-prediction improve with per-project corrections?** That question is the one
-active ticket,
+prediction improve with per-project corrections?** That question is the one open
+ticket (a draft),
 [`decide-classifier-approach`](coga/tasks/decide-classifier-approach.md).
 
 The build tickets are written but **on hold** until it is answered, in
