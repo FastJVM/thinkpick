@@ -6,7 +6,13 @@ short reason. See [the vision](coga/contexts/product/vision/SKILL.md).
 
 ## Status
 
-Nothing is built yet. The build tickets are written but **on hold** in
+Proof of concept. Nothing is built yet. The open question comes first: **can
+the right effort level be predicted from a task description, and does the
+prediction improve with per-project corrections?** That question is the one
+active ticket,
+[`decide-classifier-approach`](coga/tasks/decide-classifier-approach.md).
+
+The build tickets are written but **on hold** until it is answered, in
 [`coga/tasks/_hold/`](coga/tasks/_hold/); coga skips `_`-prefixed folders, so
 `coga status` does not list them. To start one, move it into `coga/tasks/`.
 
