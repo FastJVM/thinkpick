@@ -19,3 +19,17 @@
 2026-09-23 11:33 [decide-classifier-approach] [human:nicktoper] ticket authoring launched (interviewer=claude, agent=claude)
 2026-10-07 17:24 [bootstrap/orient] [human:nicktoper] launched (operator=claude, agent=claude)
 2026-10-07 17:32 [coga-build] [human:nicktoper] task done
+2026-10-08 10:32 [recurring/address-pr-comments] [system] created (status=active)
+2026-10-08 10:32 [recurring/address-pr-comments] [system] created recurring/address-pr-comments for 2026-10-08
+2026-10-08 10:32 [recurring/autoclose-merged] [system] created (status=active)
+2026-10-08 10:32 [recurring/autoclose-merged] [system] created recurring/autoclose-merged for 2026-10-08
+2026-10-08 10:32 [recurring/blocker-reminders] [system] created (status=active)
+2026-10-08 10:32 [recurring/blocker-reminders] [system] created recurring/blocker-reminders for 2026-10-08
+2026-10-08 10:32 [recurring/branch-sweep] [system] created (status=active)
+2026-10-08 10:32 [recurring/branch-sweep] [system] created recurring/branch-sweep for 2026-W41
+2026-10-08 10:32 [recurring/dream] [system] created (status=active)
+2026-10-08 10:32 [recurring/dream] [system] created recurring/dream for 2026-W41
+2026-10-08 10:32 [recurring/resolve-conflicts] [system] created (status=active)
+2026-10-08 10:32 [recurring/resolve-conflicts] [system] created recurring/resolve-conflicts for 2026-W41
+2026-10-08 10:32 [recurring/skill-update] [system] created (status=active)
+2026-10-08 10:32 [recurring/skill-update] [system] created recurring/skill-update for 2026-W41
