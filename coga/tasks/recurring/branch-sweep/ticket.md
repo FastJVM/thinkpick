@@ -1,6 +1,6 @@
 ---
 title: Branch sweep
-status: in_progress
+status: done
 owner: nicktoper
 agent: claude
 contexts:
@@ -13,7 +13,6 @@ workflow:
     skills:
     - coga/branch-sweep/sweep
     assignee: agent
-step: 1 (sweep)
 ---
 
 ## Description
@@ -92,3 +91,10 @@ The sweep runs on this schedule via `coga recurring`, on demand via
 <!-- coga:blackboard -->
 
 The blackboard is a notepad to be written to often as the human and agent works through a task.
+
+## Branch Sweep
+
+Generated: 2026-10-08T17:32:35+00:00
+Task: `recurring/branch-sweep`
+
+Result: 0 local and 0 remote branch(es) deleted, 0 worktree(s) removed, 0 skipped-worktree-pinned, 0 skipped.
