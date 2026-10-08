@@ -1,6 +1,6 @@
 ---
 title: coga-build
-status: in_progress
+status: done
 owner: nicktoper
 agent: claude
 workflow:
@@ -12,7 +12,6 @@ workflow:
   - name: generate-batch
     skills: []
     assignee: agent
-step: 2 (generate-batch)
 ---
 
 ## Description
