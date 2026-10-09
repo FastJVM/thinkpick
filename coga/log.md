@@ -44,3 +44,4 @@
 2026-10-08 21:21 [decide-classifier-approach] [human:nicktoper] ticket authoring launched (interviewer=claude, agent=claude)
 2026-10-08 21:25 [classifier/state-of-the-art-review] [human:nicktoper] created (status=draft)
 2026-10-08 21:25 [classifier/evaluate-jev] [human:nicktoper] created (status=draft)
+2026-10-08 21:25 [classifier/head-to-head-ground-truth] [human:nicktoper] created (status=draft)
