@@ -2,6 +2,7 @@
 title: Decide classifier approach
 status: draft
 owner: nicktoper
+agent: codex
 contexts:
   - product/vision
 workflow:
@@ -21,87 +22,61 @@ step: 1 (agent-produces)
 
 ## Description
 
-Write the decision record for how thinkpick makes its pick, plus the
-feasibility test that tells the owner whether the idea works at all.
-thinkpick is at proof-of-concept stage: the first question is whether the
-right effort level can be predicted from a task description, and whether the
-prediction improves with per-project/user corrections.
+Make the build-or-buy decision for how thinkpick picks an effort level, from
+the evidence produced by the three `classifier/*` tickets. Run this **last**,
+after `classifier/state-of-the-art-review`, `classifier/evaluate-jev`, and
+`classifier/head-to-head-ground-truth` are done (or explicitly skipped
+because an earlier result settled the question). If any input report is
+missing, say which, and ask the owner whether to proceed without it.
 
-The owner's working decision, reached in the authoring interview, is:
-**a cheap LLM call, with the owner's recent logged corrections included in
-the prompt as examples** ("learning from day one" with no training step).
-This ticket turns that into a short record the owner can approve or overturn;
-it does not build anything.
+Inputs: `docs/research/state-of-the-art.md`, `docs/research/jev-evaluation.md`,
+`docs/research/head-to-head.md`, and the labelled task set from the
+head-to-head ticket.
 
-Done means one markdown document (at `docs/decisions/classifier-approach.md`
-unless the owner says otherwise; create the directory; free-form markdown,
-no ADR template required) containing:
+Done means one markdown document at `docs/decisions/classifier-approach.md`
+(free-form, no ADR template) containing:
 
-1. **Decision:** the approach above, and the interface every backend
-   implements: task text (+ project id) in → ordered level + confidence +
-   one-line reason out. Include a sketch of the prompt shape and how examples
-   are selected (e.g. last N corrections for this project, plus a
-   too-many-examples cap).
-2. **Why, and the alternatives set aside:** heuristics, cheap LLM call, Jev,
-   and hybrids, each assessed on pick quality, cost, latency, offline use,
-   and *ability to absorb per-project/user feedback*. For each one set
-   aside, say when it would become the right choice.
-3. **Feasibility test protocol:** the owner runs the PoC on ~30 real tasks
-   and marks each pick *too little / right / too much*. Define the baseline
-   (constant "always medium", or whatever the middle level is), the pass
-   criterion (clearly beats the baseline *and* improves as corrections
-   accumulate, e.g. first 15 vs last 15), what a fail means, and the fields
-   to log per pick. Propose concrete numeric thresholds and note that n≈30 has
-   low statistical power (a PoC signal, not proof). The log fields are a
-   *proposal* that `local-was-it-right-feedback-log` may adopt, not a binding
-   schema. One labeller (the owner) is acceptable for the PoC.
-4. **Open questions** the PoC does not answer, each pointed to the ticket
-   that owns it, or marked *unowned — proposed new ticket* when none does.
+1. **Decision:** one of: reuse an existing system (e.g. Jev, a published
+   method), build our own (and which backend: cheap LLM call with logged
+   corrections as in-prompt examples, heuristics, or a hybrid), or stop
+   (the problem isn't worth solving, e.g. the cheaper level is almost always
+   fine). Cite the evidence for it.
+2. **Interface**, if building or wrapping: task text (+ project id) in →
+   ordered level + confidence + one-line reason out, and how per-project
+   corrections feed in (e.g. last N corrections as examples, with a cap).
+3. **Alternatives set aside:** heuristics, cheap LLM call, Jev, published
+   methods, and hybrids, each assessed on pick quality *as measured against
+   the head-to-head set where possible*, cost, latency, offline use, and
+   ability to absorb per-project/user feedback. For each, say when it would
+   become the right choice.
+4. **Ongoing check:** how the chosen approach keeps being scored once in use
+   (e.g. *too little / right / too much* feedback compared with the
+   head-to-head set; pass = beats an "always the middle level" baseline and
+   improves as corrections accumulate). Propose the log fields as a
+   suggestion for a future feedback-log ticket, not a binding schema.
+5. **Open questions**, each pointing to an owning ticket or marked
+   *unowned, proposed new ticket*.
 
 The owner reviews and finishes it in the `human-owns-and-finishes` step.
 
 ## Context
 
-- **Why not an experiment to choose the backend:** there is no ground truth
-  yet. The "right" level is the lowest one that would have been good enough,
-  which nobody observes; finding it means running tasks at several levels,
-  which is automated benchmarking and out of scope. So the backend is chosen
-  by reasoning, and only feasibility is tested. The LLM backend is chosen
-  because it is the easiest to build (a prompt, no rules to design), writes
-  a real reason sentence, and gets in-prompt learning almost for free. An API
-  key is acceptable; offline is not required for the PoC.
-- **Why learning matters:** the right level depends partly on the task itself
-  (general) and partly on things a classifier cannot see from the text:
-  codebase size and tangledness, which model will run the task, and the
-  user's quality/cost tolerance. Hence per-project/user corrections.
+- **History:** this ticket originally chose "cheap LLM call + in-prompt
+  corrections" by reasoning alone. The owner rejected that (2026-10-08):
+  with no ground truth we can't tell good from bad, so the evidence
+  tickets come first. The LLM approach is still the leading build
+  candidate. It is easy to build, writes a real reason sentence, and gets
+  in-prompt learning almost free. But it is no longer the default.
+- **Why learning matters:** the right level depends partly on the task and
+  partly on things the text doesn't show: codebase size and tangledness,
+  which model runs the task, and the user's quality/cost tolerance.
 - **Feedback bias:** users report "too shallow" far more readily than "less
-  would have worked". A three-way *too little / right / too much* answer,
-  logged with the level that was actually used, mitigates this. The protocol
-  should acknowledge the remaining bias.
-- **Jev** (TypeSafe AI's "System One" classifier model): returns a typed
-  choice with a calibrated probability in ~250 ms at a fraction of a cent;
-  it writes no text, so the reason would need a template. Prior art:
-  `jcm-router` uses it to pick Claude model + effort per message (see
-  github.com/yibie/awesome-jev). Unverified: whether its API accepts
-  examples/tuning (decisive for per-project learning), and a "pitfall the
-  vendor docs omit" mentioned in gist.github.com/pedramamini/014676fa8684d91bf7000f4623701ada.
-  Vendor speed/cost numbers are mostly self-reported. Treat Jev as a later
-  backend, not the PoC one. List these checks in the record; do not go
-  research them.
-- **Heuristics:** free, offline, deterministic, easy to tune per project via
-  config; but someone must design the rules and reason templates, so they're
-  more work than an LLM prompt for a PoC.
-- **Scale dependency:** the classifier outputs an *ordered* level; its exact
-  names/count and the mapping to token budgets or provider knobs belong to
-  `decide-effort-scale-and-provider-mapping`. Don't block on it: assume a
-  placeholder ordinal scale and say so, including that the protocol's
-  baseline must be re-mapped once the scale ticket lands.
-- **Related tickets that build what this decides:** `recommendation-core-library`
-  (the core and backend interface) and `local-was-it-right-feedback-log`
-  (the correction log), both drafts at `coga/tasks/<slug>.md`. Read them for
-  consistency and write the record so their designs can cite it.
-- Out of scope: writing code, running the feasibility test, picking
-  providers, packaging.
+  would have worked". The three-way answer, logged with the level actually
+  used, mitigates but doesn't remove this.
+- **Scale dependency:** the exact level names/count and the mapping to
+  provider knobs belong to a future scale ticket. Assume a placeholder
+  ordinal scale and say so.
+- Out of scope: writing code, picking providers, packaging.
 
 <!-- coga:blackboard -->
 
