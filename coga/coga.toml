@@ -78,7 +78,11 @@ discussion = "-c developer_instructions={prompt}"
 #   [notification.slack]
 #   enabled = false
 [notification]
-channels = []
+channels = ["slack"]
+
+[notification.slack]
+webhook = "env:SLACK_WEBHOOK_URL"
+important_webhook = "env:COGA_IMPORTANT_WEBHOOK_URL"
 
 # Optional Slack extras, active once you opt in above:
 #
