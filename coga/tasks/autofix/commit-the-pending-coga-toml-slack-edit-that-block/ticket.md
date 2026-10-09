@@ -1,6 +1,6 @@
 ---
 title: Commit the pending coga.toml Slack edit that blocks the recurring s...
-status: active
+status: done
 owner: nicktoper
 agent: claude
 workflow:
@@ -24,7 +24,6 @@ workflow:
     skills:
     - code/address-pr-comments
     assignee: owner
-step: 1 (implement)
 ---
 
 ## Description
