@@ -81,3 +81,55 @@ The owner reviews and finishes it in the `human-owns-and-finishes` step.
 <!-- coga:blackboard -->
 
 The blackboard is a notepad to be written to often as the human and agent works through a task.
+
+## Evaluator review
+
+(Cold review of all four tickets in the set: `classifier/state-of-the-art-review`, `classifier/evaluate-jev`, `classifier/head-to-head-ground-truth`, `decide-classifier-approach`. 2026-10-08.)
+
+Overall the set is in good shape: each ticket has a clear Description, a concrete output path and a done list, and Context copies the needed facts instead of attaching broad docs. Biggest problems are set-level: the leading build candidate (cheap LLM call) is never measured; no shared rule for scoring a 3-level pick against binary pairwise labels; two tickets need the owner mid-`agent-produces`, which the workflow doesn't model.
+
+Sizes: no per-ticket layer over 40%; only the fixed base prompt is (~53–54%). `product/vision` is 18% of head-to-head and decide.
+
+Repo facts checked: `docs/`, `scripts/`, `data/` don't exist yet. The "future scale ticket" exists as `coga/tasks/_hold/decide-effort-scale-and-provider-mapping.md`. Vision edit is uncommitted.
+
+### 1. state-of-the-art-review
+- Clear to start: yes. Done: mostly; "covers the relevant prior work" is unbounded — add a time box/size (≈10–20 sources, 3–6 pages, depth over breadth).
+- Workflow fits; no contexts needed.
+- Overlap with evaluate-jev on jcm-router — landscape-level only here.
+- Say who decides to skip siblings (owner, in human-owns-and-finishes, via `coga mark canceled --message`).
+
+### 2. evaluate-jev
+- Desk checks clear; trial under-specified: the label set / instruction sent to Jev largely decides the result; no rule for scoring a low/med/high pick against binary adjacent-pair labels (e.g. pick ≤ cheaper when cheaper sufficed = correct; pick < higher when higher needed = under-think, weighted more).
+- Workflow: the key request and fallback owner-rating need the owner during agent-produces — make `coga block` explicit.
+- Scope: desk checks (anytime) vs trial (gated on head-to-head). Split, or gate the trial and drop the "impression" fallback, which decide may lean on anyway.
+- Verify Jev/TypeSafe AI/the gist exist first; stop loudly if not. Data egress: real owner tasks go to a third-party API — ask.
+
+### 3. head-to-head-ground-truth
+- Protocol well thought out. Gaps: which provider/model (drives script and cost); which adjacent pair(s) — one pair gives ground truth for one boundary only, limiting later tickets; coding tasks need agentic runs in a repo at two settings — far more than a minimal API script. Restrict v0 to single-call tasks, or have the owner run Claude Code twice by hand and the script only record.
+- Done checkable; add uncertainty reporting (±15–20 pp at n=20–30).
+- Workflow: owner judging is the core and sits inside agent-produces — explicit block points (budget/key, task list, judging) or split protocol+script vs run+judge+analyse.
+- `product/vision` could be dropped (needed fact already copied) — mild trim.
+- Largest ticket; coding-task handling is where it could become the forbidden harness.
+- Privacy: real tasks committed to `data/ground-truth.jsonl` in an open-source repo — commit, redact, or gitignore? Cross-family judge adds a second provider key. "Concurrently" is unnecessary wording.
+
+### 4. decide-classifier-approach
+- Clear; done checkable; workflow fits; keep `product/vision`. "Offline" should be weighted low for the PoC.
+- Item 3 "against the head-to-head set where possible": no ticket runs heuristics, always-middle, or the cheap LLM call over the set, so the leading candidate is again judged by reasoning — the failure mode the owner rejected.
+- Name the held tickets (`decide-effort-scale-and-provider-mapping`, `local-was-it-right-feedback-log`).
+
+### Set-level
+- State one ordering line in each ticket: SOTA → head-to-head ‖ jev-desk → jev-trial → decide.
+- Big gap: unequal evidence. Add baseline/candidate scoring on the labelled set (always-middle, simple heuristic, cheap LLM prompt) — in head-to-head or a new `classifier/score-candidates` before decide.
+- Define the pick-vs-pairwise scoring rule once (head-to-head), referenced by evaluate-jev and decide.
+- Outside the set: `_hold/local-was-it-right-feedback-log` says "No learning in v1", contradicting the vision's "Learns from day one".
+
+### Prioritized recommendations
+1. Add candidate/baseline scoring on the head-to-head set.
+2. Head-to-head: settle provider/model, adjacent pair(s), coding-task handling before launch.
+3. Define the scoring rule once.
+4. Explicit `coga block` owner touchpoints in head-to-head and evaluate-jev (or split).
+5. Gate the Jev trial on head-to-head; verify Jev/vendor/gist exist first.
+6. Privacy/data egress decisions.
+7. Name the held tickets; fix the feedback-log contradiction.
+8. SOTA: time box; owner cancels skipped siblings; jcm-router landscape-only.
+9. Minor: drop vision from head-to-head; weight offline low; confidence intervals; commit the vision edit.
