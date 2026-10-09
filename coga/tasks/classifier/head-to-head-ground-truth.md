@@ -3,8 +3,6 @@ title: Head-to-head ground truth
 status: draft
 owner: nicktoper
 agent: codex
-contexts:
-  - product/vision
 workflow:
   name: draft-for-human
   steps:
@@ -22,60 +20,73 @@ step: 1 (agent-produces)
 
 ## Description
 
-Produce the ground truth thinkpick is missing, by running real tasks
-head-to-head at two effort levels and judging whether the cheaper level was
-good enough. Without this we can't score any classifier (ours, Jev, or a
-published one): the "right" level is the lowest one that would have
-sufficed, and nobody observes it unless they compare.
+Produce the ground truth thinkpick is missing, by running real tasks at
+several effort levels and judging whether the cheaper level was good enough.
+Without this no classifier (ours, Jev, or a published one) can be scored:
+the "right" level is the lowest one that would have sufficed, and nobody
+observes it unless they compare. thinkpick is a small CLI that recommends a
+thinking/effort level for a task.
 
 Scope it as a small, mostly manual study, **not** an automated benchmarking
 harness:
 
-1. **Protocol:** ~20–30 real tasks from the owner's work (coding and
-   non-coding). For each, run the same model at two adjacent levels
-   concurrently, show both answers blind and in random order, and record a
-   judgement: *cheaper was good enough / higher was needed / both
-   inadequate*. Define what "good enough" means per task type (e.g. coding:
-   tests pass / diff acceptable).
-2. **Judge:** the owner is the primary judge. Optionally an LLM judge as a
-   candidate: run it on the same pairs and report its agreement with the
-   owner. Don't trust it for "less would have sufficed" unless agreement is
-   high.
-3. **Run it:** a minimal script (under `scripts/`) that runs both levels and
-   records results; the owner does the judging. Log per task: task text,
-   task type, model, the two levels, tokens/cost/latency for each, the
-   verdict, the judge, and a free-text note.
-4. **Output:** the labelled task set (`data/ground-truth.jsonl` or similar)
-   plus a report at `docs/research/head-to-head.md`: what fraction of tasks
-   needed the higher level, how much the higher level cost, LLM-judge
-   agreement, and what this says about whether the problem is worth solving
-   (if the cheaper level is almost always fine, or almost never, a
-   classifier adds little).
+1. **Protocol:** ~20–30 real tasks from the owner, **answerable in a single
+   API call** (no agentic coding runs in v0; say what that leaves out). Run
+   each on one Claude model via the API at **low, medium, and high**. The
+   owner judges two blind, randomly ordered pairs per task, low vs medium and
+   medium vs high: *cheaper was good enough / higher was needed / both
+   inadequate*. Define "good enough" per task type.
+2. **Scoring rule (shared by later tickets):** a task's *right level* is the
+   lowest level judged sufficient. Say how inconsistent pairs and "both
+   inadequate" are handled. A pick is then *right*, *under*, or *over*;
+   propose a cost weighting (under-thinks weighted more, e.g. 2:1). Write the
+   rule in the report so `classifier/score-candidates`,
+   `classifier/evaluate-jev`, and `decide-classifier-approach` can cite it.
+3. **LLM judge (optional candidate):** a non-Claude model judges the same
+   pairs; report agreement with the owner, especially on "cheaper was good
+   enough".
+4. **Run it:** a minimal script under `scripts/` that runs the levels and
+   records results; the owner judges. Log per task: task text, task type,
+   model, level, tokens/cost/latency per level, each pair verdict, judge, note.
+5. **Output:** the labelled set (`data/ground-truth.jsonl`, gitignored) and
+   a report at `docs/research/head-to-head.md`: how often each level was the
+   right one, with confidence intervals (at n≈30 a proportion is ±15–20 pp),
+   the cost of higher levels, LLM-judge agreement, the scoring rule, and
+   whether the problem looks worth solving (if one level is almost always
+   right, a classifier adds little).
 
-Call out cost before running: every task runs twice. Ask the owner for the
-budget and API key. The owner reviews and finishes in the
-`human-owns-and-finishes` step.
+Owner touchpoints, each via `coga block --task
+classifier/head-to-head-ground-truth --reason "..."`: (a) budget and API
+keys, with a cost estimate (every task runs three times, plus judge calls);
+(b) the task list; (c) the judging pass. The owner reviews and finishes in
+the `human-owns-and-finishes` step.
 
 ## Context
 
-- **Scope vs vision:** `product/vision` lists "automated benchmarking of
-  tasks across levels" as out of v1. This ticket is the owner-approved
-  exception (2026-10-08): a small manual comparison is the only way to get
-  ground truth. Keep it small and scripted; don't build a reusable harness.
-- **Bandit framing:** the owner's idea is like a bandit, i.e. run two variants
-  and let a judge pick. Comparing two adjacent levels per task keeps each
-  judgement a simple binary.
-- **Neutrality:** if the runs use Claude models, a Claude-family judge may be
-  biased; prefer a different-family LLM judge, or the owner.
-- **Effort scale:** level names/count are undecided (future scale ticket).
-  Use the target provider's native effort knob (e.g. low/medium/high) and say
-  so; the mapping to a common scale comes later.
+- **Scope vs vision:** the vision puts "automated benchmarking of tasks
+  across levels" out of v1. This ticket is the owner-approved exception
+  (2026-10-08): a small manual comparison is the only way to get ground
+  truth. Keep it a script; don't build a reusable harness.
+- **Bandit framing:** the owner's idea: run variants, let a judge pick.
+  Adjacent pairs keep each judgement a simple binary.
+- **Neutrality:** runs use a Claude model, so the LLM judge should be from
+  another family.
 - **Feedback bias:** users report "too shallow" more readily than "less
-  would have worked". Blind, randomised pairs are what counter it here.
+  would have worked". Blind, randomised pairs counter it here.
+- **Effort scale:** level names/count are undecided, owned by
+  `_hold/decide-effort-scale-and-provider-mapping`. Use the provider's native
+  low < medium < high as a placeholder ordinal scale and say so.
+- **Data:** the owner approved (2026-10-08) sending real tasks to Jev and to
+  a non-Claude judge. Files containing real task text stay out of git (put
+  them under a gitignored `data/` and add the ignore rule). Commit only
+  reports with aggregate results and redacted examples.
 - Read `docs/research/state-of-the-art.md` first if it exists: prior work
   may have a judging protocol worth copying.
-- The labelled set is the yardstick for `classifier/evaluate-jev` and the
-  input to `decide-classifier-approach`.
+- **Order:** `classifier/state-of-the-art-review` →
+  `classifier/head-to-head-ground-truth` (Jev desk checks may run in
+  parallel) → `classifier/score-candidates` and the Jev trial →
+  `decide-classifier-approach`. The owner may cancel any ticket an earlier
+  result makes unnecessary (`coga mark canceled --message`).
 
 <!-- coga:blackboard -->
 

@@ -37,14 +37,17 @@ that is answered.
   locally and fed back into later picks, per project/user.
 
 **Out of v1:** automated benchmarking of tasks across levels, hosted service
-or web UI.
+or web UI. (Exception: a small, mostly manual head-to-head comparison to get
+ground truth is in scope; see `classifier/head-to-head-ground-truth`.)
 
 ## Open decisions
 
 Deliberately deferred at onboarding; each is a "decide/evaluate" ticket:
 
-- Classifier approach: leaning cheap LLM call + logged corrections as
-  in-prompt examples (see `decide-classifier-approach`).
+- Classifier approach: evidence first (`classifier/*` tickets: state of the
+  art, Jev, head-to-head ground truth), then build-or-buy in
+  `decide-classifier-approach`. Cheap LLM call + logged corrections is the
+  leading build candidate.
 - Which providers/models to support, and how their effort/thinking knobs map
   onto one common scale.
 - Shape of the scale itself: named levels vs token budgets.

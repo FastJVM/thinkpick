@@ -37,7 +37,12 @@ step: 1 (design)
 
 ## Description
 
-Optional 'was this right?' feedback after a pick, logged locally, so a dataset accumulates for v2 learning. No learning in v1.
+Optional *too little / right / too much* feedback after a pick, logged
+locally per project/user together with the level actually used, and fed back
+into later picks: thinkpick learns from day one (see `product/vision`). How
+the log feeds the classifier (e.g. recent corrections as in-prompt examples)
+is set by `decide-classifier-approach`; the log fields proposed there are a
+starting point, not a binding schema.
 
 ## Context
 
