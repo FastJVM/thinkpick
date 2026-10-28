@@ -20,6 +20,15 @@ step: 1 (agent-produces)
 
 ## Description
 
+### Owner decision (2026-10-28): work deferred
+
+Thinkpick is paused before any experiment or implementation. This ticket is a
+draft of possible work, not an active assignment. Read
+`coga/contexts/product/vision/SKILL.md` ("Decision (2026-10-28)") for the
+rationale and restart conditions. Do not launch this ticket until the owner
+explicitly reopens the project and reviews whether this scope is still useful.
+No benchmark results or classifier performance are claimed here.
+
 Find out whether Jev (TypeSafe AI's "System One" classifier model) can do
 thinkpick's job well enough that we don't need to build our own classifier.
 thinkpick recommends a thinking/effort level for a task description, and Jev

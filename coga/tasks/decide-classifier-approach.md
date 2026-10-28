@@ -22,6 +22,15 @@ step: 1 (agent-produces)
 
 ## Description
 
+### Owner decision (2026-10-28): work deferred
+
+Thinkpick is paused before any experiment or implementation. This ticket is a
+draft of possible work, not an active assignment. Read
+`coga/contexts/product/vision/SKILL.md` ("Decision (2026-10-28)") for the
+rationale and restart conditions. Do not launch this ticket until the owner
+explicitly reopens the project and reviews whether this scope is still useful.
+No benchmark results or classifier performance are claimed here.
+
 Make the build-or-buy decision for how thinkpick picks an effort level, from
 the evidence produced by the four `classifier/*` tickets. Run this **last**,
 after `classifier/state-of-the-art-review`, `classifier/evaluate-jev`,
