@@ -20,6 +20,15 @@ step: 1 (agent-produces)
 
 ## Description
 
+### Owner decision (2026-10-28): work deferred
+
+Thinkpick is paused before any experiment or implementation. This ticket is a
+draft of possible work, not an active assignment. Read
+`coga/contexts/product/vision/SKILL.md` ("Decision (2026-10-28)") for the
+rationale and restart conditions. Do not launch this ticket until the owner
+explicitly reopens the project and reviews whether this scope is still useful.
+No benchmark results or classifier performance are claimed here.
+
 Score the build candidates on the head-to-head labelled set, so the final
 decision compares measured results rather than reasoning. thinkpick is a
 small CLI that recommends a thinking/effort level for a task; until now only
