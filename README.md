@@ -1,22 +1,33 @@
 # thinkpick
 
-A small open-source tool that tells you how much thinking / reasoning effort
-to give a model for a task. Describe the task; get a recommended level with a
-short reason. See [the vision](coga/contexts/product/vision/SKILL.md).
+Thinkpick is a proposed small open-source tool for recommending how much
+thinking / reasoning effort to give a model for a task. Describe the task;
+get a level and a short reason. See [the vision](coga/contexts/product/vision/SKILL.md).
 
 ## Status
 
-Proof of concept. Nothing is built yet. The open question comes first: **can
-the right effort level be predicted from a task description, and does the
-prediction improve with per-project corrections?** That question is the one open
-ticket (a draft),
-[`decide-classifier-approach`](coga/tasks/decide-classifier-approach.md).
+**Paused, not abandoned (owner decision, 2026-10-28).** Nothing has been
+implemented or experimentally validated. The first plan assumed we could
+select a good reasoning-effort classifier without first establishing what
+"good" means.
 
-The build tickets are written but **on hold** until it is answered, in
-[`coga/tasks/_hold/`](coga/tasks/_hold/); coga skips `_`-prefixed folders, so
-`coga status` does not list them. To start one, move it into `coga/tasks/`.
+A small low/medium/high API study on isolated tasks might help test that
+assumption, but would not prove cost, latency, or quality gains inside real
+Claude Code or Codex sessions. Measuring the practical benefit requires an
+agent-workflow integration (potentially a hook, launcher, or proxy) and
+end-to-end evaluation. That investment is not justified yet; existing
+routers may be candidates for reuse if work resumes.
 
-## Working on it
+**This is a decision to defer, not evidence that effort routing fails.**
+The [product vision](coga/contexts/product/vision/SKILL.md#decision-2026-10-28-paused-not-abandoned)
+records the reasoning and conditions for restarting.
+
+The four `classifier/*` research tickets and
+[`decide-classifier-approach`](coga/tasks/decide-classifier-approach.md)
+remain drafts, not completed research or an active project plan. Build
+tickets remain under [`coga/tasks/_hold/`](coga/tasks/_hold/).
+
+## Inspecting or revisiting the plan
 
 This repo uses [coga](https://github.com/FastJVM/coga) for tasks and context.
 In a fresh clone, first give coga your name (the file is gitignored):
@@ -24,7 +35,8 @@ In a fresh clone, first give coga your name (the file is gitignored):
 ```sh
 echo 'user = "<your-name>"' > coga/coga.local.toml
 coga validate
-coga launch <slug>
+coga status
+coga show decide-classifier-approach
 ```
 
 Notifications are off in the shared `coga/coga.toml`. If your shell exports
