@@ -1,6 +1,6 @@
 ---
 name: product/vision
-description: Starter vision for thinkpick — what it is, who it's for, what success looks like, and the PoC scope shape. A living doc; the owner edits it as the project evolves.
+description: Thinkpick's product intent, paused decision, proposed scope, and conditions for restarting.
 ---
 
 # thinkpick — vision
@@ -8,9 +8,9 @@ description: Starter vision for thinkpick — what it is, who it's for, what suc
 *Living starter doc. Edit as the project evolves; this is a direction, not a
 finished spec.*
 
-**What.** thinkpick is a small open-source tool that tells you how much
-thinking / reasoning effort to give a model for a task. You describe the task;
-it returns a recommended level with a short reason.
+**What (proposed).** Thinkpick would be a small open-source tool that
+recommends how much reasoning effort to give a model for a task. The user
+describes a task; the tool returns a level and a short reason.
 
 **Who.** The author first, then any developer working with reasoning models
 who is tired of guessing the effort level — overpaying on easy tasks or
@@ -64,8 +64,8 @@ corrections. No experiment has answered it.
 
 - Task description in → recommended level + one-line reason out.
 - Runs locally as a small CLI with a library core (a Python script is fine).
-  Not a web app, not a hosted service. A Claude Code hook is a likely next
-  step, not the first one.
+  Not a web app, not a hosted service. A Claude Code hook was a possible
+  later integration, not part of the initial API-only test.
 - An API key is acceptable; offline use is not required for the PoC.
 - **Learns from day one:** "too little / right / too much" feedback is logged
   locally and fed back into later picks, per project/user.
